@@ -4,22 +4,23 @@ import {
   interestingFeatures,
   hotkeys,
   windowNames,
-  fortniteClassId,
+  siegeClassId,
 } from "../consts";
 import WindowState = overwolf.windows.WindowStateEx;
+import { Prisma, PrismaClient } from "@prisma/client";
 
-// The window displayed in-game while a Fortnite game is running.
+// The window displayed in-game while a Siege game is running.
 // It listens to all info events and to the game events listed in the consts.ts file
 // and writes them to the relevant log using <pre> tags.
 // The window also sets up Ctrl+F as the minimize/restore hotkey.
 // Like the background window, it also implements the Singleton design pattern.
 class InGame extends AppWindow {
   private static _instance: InGame;
-  private _fortniteGameEventsListener: OWGamesEvents;
+  private _siegeGameEventsListener: OWGamesEvents;
   private _eventsLog: HTMLElement;
   private _infoLog: HTMLElement;
 
-  private constructor() {
+  private constructor(private db: PrismaClient) {
     super(windowNames.inGame);
 
     this._eventsLog = document.getElementById("eventsLog");
@@ -28,7 +29,7 @@ class InGame extends AppWindow {
     this.setToggleHotkeyBehavior();
     this.setToggleHotkeyText();
 
-    this._fortniteGameEventsListener = new OWGamesEvents(
+    this._siegeGameEventsListener = new OWGamesEvents(
       {
         onInfoUpdates: this.onInfoUpdates.bind(this),
         onNewEvents: this.onNewEvents.bind(this),
@@ -39,14 +40,16 @@ class InGame extends AppWindow {
 
   public static instance() {
     if (!this._instance) {
-      this._instance = new InGame();
+      const prisma = new PrismaClient();
+
+      this._instance = new InGame(prisma);
     }
 
     return this._instance;
   }
 
   public run() {
-    this._fortniteGameEventsListener.start();
+    this._siegeGameEventsListener.start();
   }
 
   private onInfoUpdates(info) {
@@ -57,12 +60,15 @@ class InGame extends AppWindow {
   private onNewEvents(e) {
     const shouldHighlight = e.events.some((event) => {
       switch (event.name) {
+        case "game_info":
+        case "match":
+        case "roster":
         case "kill":
+          this.saveKill(event);
+          break;
         case "death":
-        case "assist":
-        case "level":
-        case "matchStart":
-        case "matchEnd":
+        case "match_info":
+        case "me":
           return true;
       }
 
@@ -71,11 +77,27 @@ class InGame extends AppWindow {
     this.logLine(this._eventsLog, e, shouldHighlight);
   }
 
+  public async saveKill(event) {
+    await this.db.teamkills.create({
+      data: {
+        matchId: "0",
+        matchType: "ranked",
+        offender: "me",
+        victim: "you",
+        offenderKD: "1",
+        victimKD: "1",
+        offenderOperator: "Sledge",
+        victimOperator: "IQ",
+        round: 0,
+      },
+    });
+  }
+
   // Displays the toggle minimize/restore hotkey in the window header
   private async setToggleHotkeyText() {
     const hotkeyText = await OWHotkeys.getHotkeyText(
       hotkeys.toggle,
-      fortniteClassId
+      siegeClassId
     );
     const hotkeyElem = document.getElementById("hotkey");
     hotkeyElem.textContent = hotkeyText;
@@ -128,3 +150,4 @@ class InGame extends AppWindow {
 }
 
 InGame.instance().run();
+InGame.instance().saveKill({});

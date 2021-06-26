@@ -6,8 +6,8 @@
     "author": "Overwolf",
     "version": "3.0.1",
     "minimum-overwolf-version": "0.160.0",
-    "description": "An example app for developers new to Overwolf",
-    "dock_button_title": "Sample - TS",
+    "description": "Nate's personal stat tracker",
+    "dock_button_title": "Siege Custom Stat Tracker",
     "icon": "icons/IconMouseOver.png",
     "icon_gray": "icons/IconMouseNormal.png",
     "launcher_icon": "icons/DesktopIcon.ico",
@@ -61,18 +61,18 @@
     "game_targeting": {
       "type": "dedicated",
       "game_ids": [
-        21216
+        10826
       ]
     },
     "game_events": [
-      21216
+      10826
     ],
     "launch_events": [
       {
         "event": "GameLaunch",
         "event_data": {
           "game_ids": [
-            21216
+            10826
           ]
         },
         "start_minimized": false
