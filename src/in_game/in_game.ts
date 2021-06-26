@@ -7,7 +7,7 @@ import {
   siegeClassId,
 } from "../consts";
 import WindowState = overwolf.windows.WindowStateEx;
-import { Prisma, PrismaClient } from "@prisma/client";
+import { SiegeEventHandler } from "../handlers/siege-event.handler";
 
 // The window displayed in-game while a Siege game is running.
 // It listens to all info events and to the game events listed in the consts.ts file
@@ -19,12 +19,14 @@ class InGame extends AppWindow {
   private _siegeGameEventsListener: OWGamesEvents;
   private _eventsLog: HTMLElement;
   private _infoLog: HTMLElement;
+  private _siegeEventHandler: SiegeEventHandler;
 
-  private constructor(private db: PrismaClient) {
+  private constructor() {
     super(windowNames.inGame);
 
     this._eventsLog = document.getElementById("eventsLog");
     this._infoLog = document.getElementById("infoLog");
+    this._siegeEventHandler = new SiegeEventHandler();
 
     this.setToggleHotkeyBehavior();
     this.setToggleHotkeyText();
@@ -40,9 +42,7 @@ class InGame extends AppWindow {
 
   public static instance() {
     if (!this._instance) {
-      const prisma = new PrismaClient();
-
-      this._instance = new InGame(prisma);
+      this._instance = new InGame();
     }
 
     return this._instance;
@@ -53,44 +53,13 @@ class InGame extends AppWindow {
   }
 
   private onInfoUpdates(info) {
-    this.logLine(this._infoLog, info, false);
+    this._siegeEventHandler.onInfo(info);
+    this.logLine(this._infoLog, info);
   }
 
-  // Special events will be highlighted in the event log
-  private onNewEvents(e) {
-    const shouldHighlight = e.events.some((event) => {
-      switch (event.name) {
-        case "game_info":
-        case "match":
-        case "roster":
-        case "kill":
-          this.saveKill(event);
-          break;
-        case "death":
-        case "match_info":
-        case "me":
-          return true;
-      }
-
-      return false;
-    });
-    this.logLine(this._eventsLog, e, shouldHighlight);
-  }
-
-  public async saveKill(event) {
-    await this.db.teamkills.create({
-      data: {
-        matchId: "0",
-        matchType: "ranked",
-        offender: "me",
-        victim: "you",
-        offenderKD: "1",
-        victimKD: "1",
-        offenderOperator: "Sledge",
-        victimOperator: "IQ",
-        round: 0,
-      },
-    });
+  private onNewEvents(event) {
+    this._siegeEventHandler.onEvents(event);
+    this.logLine(this._eventsLog, event);
   }
 
   // Displays the toggle minimize/restore hotkey in the window header
@@ -128,15 +97,11 @@ class InGame extends AppWindow {
   }
 
   // Appends a new line to the specified log
-  private logLine(log: HTMLElement, data, highlight) {
+  private logLine(log: HTMLElement, data) {
     console.log(`${log.id}:`);
     console.log(data);
     const line = document.createElement("pre");
     line.textContent = JSON.stringify(data);
-
-    if (highlight) {
-      line.className = "highlight";
-    }
 
     const shouldAutoScroll =
       log.scrollTop + log.offsetHeight > log.scrollHeight - 10;
@@ -150,4 +115,3 @@ class InGame extends AppWindow {
 }
 
 InGame.instance().run();
-InGame.instance().saveKill({});
