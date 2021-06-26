@@ -39,4 +39,6 @@ const hotkeys = {
   toggle: "showhide",
 };
 
-export { siegeClassId, interestingFeatures, windowNames, hotkeys };
+const apiUrl = "localhost:7000/api";
+
+export { siegeClassId, interestingFeatures, windowNames, hotkeys, apiUrl };

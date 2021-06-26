@@ -1,17 +1,35 @@
-import * as rc from 'typed-rest-client/RestClient';
+import * as rc from "typed-rest-client/RestClient";
+import { apiUrl } from "../constants";
+import { Match } from "../models/match";
 
-export const findAll = async (): Promise<Match> => {
-    let response = await 
-  
-    if (!response) throw new Error("No match exists with that ID");
-  
-    return response;
-  };
+export class MatchService {
+  private rest: rc.RestClient;
 
-export const find = async (id: number): Promise<Match> => {
-    let response = await prisma.matches.findUnique({ where: { id: id } });
-  
-    if (!response) throw new Error("No match exists with that ID");
-  
-    return response;
-  };
+  constructor() {
+    this.rest = new rc.RestClient("", `${apiUrl}/matches`);
+  }
+
+  async findAll(): Promise<Match[]> {
+    let response = await this.rest.get<Match[]>("");
+    return response.result;
+  }
+
+  async find(id: number): Promise<Match> {
+    let response = await this.rest.get<Match>(`/${id}`);
+    return response.result;
+  }
+
+  async create(match: Match): Promise<Match> {
+    let response = await this.rest.create<Match>("", match);
+    return response.result;
+  }
+
+  async update(match: Match): Promise<Match> {
+    let response = await this.rest.update<Match>(`/${match.id}`, match);
+    return response.result;
+  }
+
+  async delete(id: number): Promise<void> {
+    await this.rest.del(`/${id}`);
+  }
+}

@@ -5,7 +5,7 @@ import {
   hotkeys,
   windowNames,
   siegeClassId,
-} from "../consts";
+} from "../constants";
 import WindowState = overwolf.windows.WindowStateEx;
 import { SiegeEventHandler } from "../handlers/siege-event.handler";
 

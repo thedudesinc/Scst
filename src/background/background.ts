@@ -1,4 +1,4 @@
-import { windowNames, siegeClassId } from "../consts";
+import { windowNames, siegeClassId } from "../constants";
 import { OWGames, OWGameListener, OWWindow } from "@overwolf/overwolf-api-ts";
 import RunningGameInfo = overwolf.games.RunningGameInfo;
 

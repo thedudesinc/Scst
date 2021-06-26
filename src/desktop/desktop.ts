@@ -1,5 +1,5 @@
 import { AppWindow } from "../AppWindow";
-import { windowNames } from "../consts";
+import { windowNames } from "../constants";
 
 // The desktop window is the window displayed while Fortnite is not running.
 // In our case, our desktop window has no logic - it only displays static data.
