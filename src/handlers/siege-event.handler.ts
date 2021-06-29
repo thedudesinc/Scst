@@ -2,21 +2,26 @@ import { MatchService } from "../services/match.service";
 import { TeamkillService } from "../services/teamkill.service";
 
 export class SiegeEventHandler {
-  constructor(
-    private matchService: MatchService,
-    private teamkillService: TeamkillService
-  ) {}
+  private matchService: MatchService;
+  private teamkillService: TeamkillService;
+
+  constructor() {
+    this.matchService = new MatchService();
+    this.teamkillService = new TeamkillService();
+  }
 
   private matchId = "";
 
   onEvents(event) {
     switch (event.name) {
+      case "kill":
+        this.onKill(event);
+        break;
       case "matchOutcome":
       case "roundEnd":
       case "roundOutcome":
       case "roundStart":
       case "headshot":
-      case "kill":
       case "death":
       case "killer":
       case "knockedout":
@@ -35,7 +40,6 @@ export class SiegeEventHandler {
         break;
       case "phase":
       case "number":
-      case "score":
       case "deaths":
       case "health":
       case "kills":
@@ -52,5 +56,9 @@ export class SiegeEventHandler {
         break;
     }
     console.log(info);
+  }
+
+  onKill(event): void {
+    
   }
 }

@@ -1,38 +1,80 @@
-import * as rc from "typed-rest-client/RestClient";
 import { apiUrl } from "../constants";
 import { Teamkill } from "../models/teamkill";
 
 export class TeamkillService {
-  private rest: rc.RestClient;
-
-  constructor() {
-    this.rest = new rc.RestClient("", `${apiUrl}/teamkills`);
-  }
-
   async findAll(): Promise<Teamkill[]> {
-    let response = await this.rest.get<Teamkill[]>("");
-    return response.result;
+    let response: any = await new Promise((resolve) => {
+      overwolf.web.sendHttpRequest(
+        `${apiUrl}/teamkills`,
+        overwolf.web.enums.HttpRequestMethods.GET,
+        [],
+        "",
+        (response) => resolve(response)
+      );
+    });
+
+    let result: Teamkill[] = JSON.parse(response.data);
+
+    return result;
   }
 
   async find(id: number): Promise<Teamkill> {
-    let response = await this.rest.get<Teamkill>(`/${id}`);
-    return response.result;
+    let response: any = await new Promise((resolve) => {
+      overwolf.web.sendHttpRequest(
+        `${apiUrl}/teamkills/${id}`,
+        overwolf.web.enums.HttpRequestMethods.GET,
+        [],
+        "",
+        (response) => resolve(response)
+      );
+    });
+
+    let result: Teamkill = JSON.parse(response.data);
+
+    return result;
   }
 
   async create(teamkill: Teamkill): Promise<Teamkill> {
-    let response = await this.rest.create<Teamkill>("", teamkill);
-    return response.result;
+    let response: any = await new Promise((resolve) => {
+      overwolf.web.sendHttpRequest(
+        `${apiUrl}/teamkills`,
+        overwolf.web.enums.HttpRequestMethods.POST,
+        [],
+        "",
+        (response) => resolve(response)
+      );
+    });
+
+    let result: Teamkill = JSON.parse(response.data);
+
+    return result;
   }
 
   async update(teamkill: Teamkill): Promise<Teamkill> {
-    let response = await this.rest.update<Teamkill>(
-      `/${teamkill.id}`,
-      teamkill
-    );
-    return response.result;
+    let response: any = await new Promise((resolve) => {
+      overwolf.web.sendHttpRequest(
+        `${apiUrl}/teamkills/${teamkill.id}`,
+        overwolf.web.enums.HttpRequestMethods.PUT,
+        [],
+        "",
+        (response) => resolve(response)
+      );
+    });
+
+    let result: Teamkill = JSON.parse(response.data);
+
+    return result;
   }
 
   async delete(id: number): Promise<void> {
-    await this.rest.del(`/${id}`);
+    let response: any = await new Promise((resolve) => {
+      overwolf.web.sendHttpRequest(
+        `${apiUrl}/teamkills/${id}`,
+        overwolf.web.enums.HttpRequestMethods.DELETE,
+        [],
+        "",
+        (response) => resolve(response)
+      );
+    });
   }
 }

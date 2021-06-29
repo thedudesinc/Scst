@@ -15,7 +15,8 @@
   },
   "permissions": [
     "Hotkeys",
-    "GameInfo"
+    "GameInfo",
+    "Web"
   ],
   "data": {
     "start_window": "background",
