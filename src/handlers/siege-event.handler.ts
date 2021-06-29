@@ -23,6 +23,8 @@ export class SiegeEventHandler {
       case "roundStart":
       case "headshot":
       case "death":
+        this.onKill(event);
+        break;
       case "killer":
       case "knockedout":
       case "defuser_disabled":
