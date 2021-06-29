@@ -6,6 +6,7 @@ export class SiegeEventHandler {
   private teamkillService: TeamkillService;
 
   constructor() {
+    console.log("made it to constructor");
     this.matchService = new MatchService();
     this.teamkillService = new TeamkillService();
   }
@@ -13,6 +14,7 @@ export class SiegeEventHandler {
   private matchId = "";
 
   onEvents(event) {
+    console.log("made it to onEvents");
     switch (event.name) {
       case "kill":
         this.onKill(event);

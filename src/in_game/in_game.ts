@@ -58,6 +58,7 @@ class InGame extends AppWindow {
   }
 
   private onNewEvents(event) {
+    console.log("made it to onNewEvents");
     this._siegeEventHandler.onEvents(event);
     this.logLine(this._eventsLog, event);
   }
@@ -98,8 +99,6 @@ class InGame extends AppWindow {
 
   // Appends a new line to the specified log
   private logLine(log: HTMLElement, data) {
-    console.log(`${log.id}:`);
-    console.log(data);
     const line = document.createElement("pre");
     line.textContent = JSON.stringify(data);
 
