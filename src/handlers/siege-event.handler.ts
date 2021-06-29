@@ -15,6 +15,7 @@ export class SiegeEventHandler {
 
   onEvents(event) {
     console.log("made it to onEvents");
+    console.log(event);
     switch (event.name) {
       case "kill":
         this.onKill(event);
