@@ -1,7 +1,7 @@
 export interface Match {
-  id: number;
-  createdAt: Date;
-  updatedAt: Date;
+  id?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
   matchId: string;
   matchType: string;
   players: string;

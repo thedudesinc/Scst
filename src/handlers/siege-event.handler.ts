@@ -30,13 +30,13 @@ export class SiegeEventHandler {
       default:
         break;
     }
-    console.log(event);
   }
 
   onInfo(info) {
     switch (info.name) {
       case "match_id":
         this.matchId = info.match_info.match_id;
+        console.log(info);
         break;
       case "phase":
       case "number":
@@ -59,6 +59,17 @@ export class SiegeEventHandler {
   }
 
   onKill(event): void {
-    
+    console.log(event);
+    this.teamkillService.create({
+      matchId: this.matchId,
+      matchType: "Testing",
+      offender: "Nighthawk909",
+      offenderKD: "1",
+      offenderOperator: "sledge",
+      victim: "mr.mustard",
+      victimKD: "2",
+      victimOperator: "IQ",
+      round: 1,
+    });
   }
 }
