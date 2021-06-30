@@ -58,7 +58,6 @@ class InGame extends AppWindow {
   }
 
   private onNewEvents(event) {
-    console.log("made it to onNewEvents");
     this._siegeEventHandler.onEvents(event);
     this.logLine(this._eventsLog, event);
   }

@@ -14,9 +14,8 @@ export class SiegeEventHandler {
   private matchId = "";
 
   onEvents(event) {
-    console.log("made it to onEvents");
     console.log(event);
-    switch (event.name) {
+    switch (event.events[0].name) {
       case "kill":
         this.onKill(event);
         break;
@@ -60,7 +59,6 @@ export class SiegeEventHandler {
       default:
         break;
     }
-    console.log(info);
   }
 
   onKill(event): void {

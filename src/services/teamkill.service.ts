@@ -39,8 +39,8 @@ export class TeamkillService {
       overwolf.web.sendHttpRequest(
         `${apiUrl}/teamkills`,
         overwolf.web.enums.HttpRequestMethods.POST,
-        [],
-        "",
+        [{ key: "Content-Type", value: "application/json" }],
+        JSON.stringify(teamkill),
         (response) => resolve(response)
       );
     });
