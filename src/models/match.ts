@@ -2,8 +2,12 @@ export interface Match {
   id?: number;
   createdAt?: Date;
   updatedAt?: Date;
-  matchId: string;
-  matchType: string;
+  gameMatchId: string;
+  owMatchId: string;
+  gameMode: string;
+  map: string;
   players: string;
-  isVictory: boolean;
+  blueScore: number;
+  orangeScore: number;
+  roundsPlayed: number;
 }

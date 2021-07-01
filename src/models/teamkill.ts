@@ -2,8 +2,7 @@ export interface Teamkill {
   id?: number;
   createdAt?: Date;
   updatedAt?: Date;
-  matchId: string;
-  matchType: string;
+  matchId: number;
   offender: string;
   victim: string;
   offenderOperator: string;

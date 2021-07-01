@@ -7,7 +7,6 @@ export class AppWindow {
   protected currWindow: OWWindow;
   protected mainWindow: OWWindow;
   protected maximized: boolean = false;
-  private teamkillService: TeamkillService;
 
   constructor(windowName) {
     this.mainWindow = new OWWindow("background");
@@ -18,20 +17,6 @@ export class AppWindow {
     const minimizeButton = document.getElementById("minimizeButton");
 
     const header = document.getElementById("header");
-
-    this.teamkillService = new TeamkillService();
-
-    this.teamkillService.create({
-      matchId: "1",
-      matchType: "Testing",
-      offender: "Nighthawk909",
-      offenderKD: "1",
-      offenderOperator: "sledge",
-      victim: "mr.mustard",
-      victimKD: "2",
-      victimOperator: "IQ",
-      round: 1,
-    });
 
     this.setDrag(header);
 

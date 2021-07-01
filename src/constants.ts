@@ -1,33 +1,15 @@
 const siegeClassId = 10826;
 
 const interestingFeatures = [
-  "matchOutcome",
-  "roundEnd",
-  "roundOutcome",
-  "roundStart",
-  "headshot",
+  "gep_internal",
+  "game_info",
+  "match",
+  "match_info",
+  "roster",
   "kill",
   "death",
-  "killer",
-  "knockedout",
-  "defuser_disabled",
-  "defuser_planted",
-  "phase",
-  "number",
-  "score",
-  "deaths",
-  "health",
-  "kills",
-  "roster",
-  "score",
-  "team",
-  "game_mode",
-  "map_id",
-  "match_id",
-  "pseudo_match_id",
-  "round_outcome_type",
-  "account_id",
-  "name",
+  "me",
+  "defuser",
 ];
 
 const windowNames = {
@@ -39,6 +21,6 @@ const hotkeys = {
   toggle: "showhide",
 };
 
-const apiUrl = "localhost:7000/api";
+const apiUrl = "http://localhost:7000/api";
 
 export { siegeClassId, interestingFeatures, windowNames, hotkeys, apiUrl };

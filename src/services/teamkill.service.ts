@@ -3,78 +3,73 @@ import { Teamkill } from "../models/teamkill";
 
 export class TeamkillService {
   async findAll(): Promise<Teamkill[]> {
-    let response: any = await new Promise((resolve) => {
-      overwolf.web.sendHttpRequest(
-        `${apiUrl}/teamkills`,
-        overwolf.web.enums.HttpRequestMethods.GET,
-        [],
-        "",
-        (response) => resolve(response)
-      );
+    const response = await fetch(`${apiUrl}/teamkills`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      referrerPolicy: "no-referrer",
+      body: "",
     });
 
-    let result: Teamkill[] = JSON.parse(response.data);
+    let result: Teamkill[] = await response.json();
 
     return result;
   }
 
   async find(id: number): Promise<Teamkill> {
-    let response: any = await new Promise((resolve) => {
-      overwolf.web.sendHttpRequest(
-        `${apiUrl}/teamkills/${id}`,
-        overwolf.web.enums.HttpRequestMethods.GET,
-        [],
-        "",
-        (response) => resolve(response)
-      );
+    const response = await fetch(`${apiUrl}/teamkills/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      referrerPolicy: "no-referrer",
+      body: "",
     });
 
-    let result: Teamkill = JSON.parse(response.data);
+    let result: Teamkill = await response.json();
 
     return result;
   }
 
   async create(teamkill: Teamkill): Promise<Teamkill> {
-    let response: any = await new Promise((resolve) => {
-      overwolf.web.sendHttpRequest(
-        `${apiUrl}/teamkills`,
-        overwolf.web.enums.HttpRequestMethods.POST,
-        [{ key: "Content-Type", value: "application/json" }],
-        JSON.stringify(teamkill),
-        (response) => resolve(response)
-      );
+    const response = await fetch(`${apiUrl}/teamkills`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      referrerPolicy: "no-referrer",
+      body: JSON.stringify(teamkill),
     });
 
-    let result: Teamkill = JSON.parse(response.data);
+    let result: Teamkill = await response.json();
 
     return result;
   }
 
   async update(teamkill: Teamkill): Promise<Teamkill> {
-    let response: any = await new Promise((resolve) => {
-      overwolf.web.sendHttpRequest(
-        `${apiUrl}/teamkills/${teamkill.id}`,
-        overwolf.web.enums.HttpRequestMethods.PUT,
-        [],
-        "",
-        (response) => resolve(response)
-      );
+    const response = await fetch(`${apiUrl}/teamkills/${teamkill.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      referrerPolicy: "no-referrer",
+      body: JSON.stringify(teamkill),
     });
 
-    let result: Teamkill = JSON.parse(response.data);
+    let result: Teamkill = await response.json();
 
     return result;
   }
 
   async delete(id: number): Promise<void> {
-    let response: any = await new Promise((resolve) => {
-      overwolf.web.sendHttpRequest(
-        `${apiUrl}/teamkills/${id}`,
-        overwolf.web.enums.HttpRequestMethods.DELETE,
-        [],
-        "",
-        (response) => resolve(response)
-      );
+    await fetch(`${apiUrl}/teamkills/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      referrerPolicy: "no-referrer",
+      body: "",
     });
   }
 }

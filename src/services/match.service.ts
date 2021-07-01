@@ -3,78 +3,73 @@ import { Match } from "../models/match";
 
 export class MatchService {
   async findAll(): Promise<Match[]> {
-    let response: any = await new Promise((resolve) => {
-      overwolf.web.sendHttpRequest(
-        `${apiUrl}/matches`,
-        overwolf.web.enums.HttpRequestMethods.GET,
-        [],
-        "",
-        (response) => resolve(response)
-      );
+    const response = await fetch(`${apiUrl}/matches`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      referrerPolicy: "no-referrer",
+      body: "",
     });
 
-    let result: Match[] = JSON.parse(response.data);
+    let result: Match[] = await response.json();
 
     return result;
   }
 
   async find(id: number): Promise<Match> {
-    let response: any = await new Promise((resolve) => {
-      overwolf.web.sendHttpRequest(
-        `${apiUrl}/matches/${id}`,
-        overwolf.web.enums.HttpRequestMethods.GET,
-        [],
-        "",
-        (response) => resolve(response)
-      );
+    const response = await fetch(`${apiUrl}/matches/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      referrerPolicy: "no-referrer",
+      body: "",
     });
 
-    let result: Match = JSON.parse(response.data);
+    let result: Match = await response.json();
 
     return result;
   }
 
   async create(match: Match): Promise<Match> {
-    let response: any = await new Promise((resolve) => {
-      overwolf.web.sendHttpRequest(
-        `${apiUrl}/matches`,
-        overwolf.web.enums.HttpRequestMethods.POST,
-        [],
-        "",
-        (response) => resolve(response)
-      );
+    const response = await fetch(`${apiUrl}/matches`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      referrerPolicy: "no-referrer",
+      body: JSON.stringify(match),
     });
 
-    let result: Match = JSON.parse(response.data);
+    let result: Match = await response.json();
 
     return result;
   }
 
   async update(match: Match): Promise<Match> {
-    let response: any = await new Promise((resolve) => {
-      overwolf.web.sendHttpRequest(
-        `${apiUrl}/matches/${match.id}`,
-        overwolf.web.enums.HttpRequestMethods.PUT,
-        [],
-        "",
-        (response) => resolve(response)
-      );
+    const response = await fetch(`${apiUrl}/matches/${match.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      referrerPolicy: "no-referrer",
+      body: JSON.stringify(match),
     });
 
-    let result: Match = JSON.parse(response.data);
+    let result: Match = await response.json();
 
     return result;
   }
 
   async delete(id: number): Promise<void> {
-    await new Promise((resolve) => {
-      overwolf.web.sendHttpRequest(
-        `${apiUrl}/matches/${id}`,
-        overwolf.web.enums.HttpRequestMethods.DELETE,
-        [],
-        "",
-        (response) => resolve(response)
-      );
+    await fetch(`${apiUrl}/matches/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      referrerPolicy: "no-referrer",
+      body: "",
     });
   }
 }
