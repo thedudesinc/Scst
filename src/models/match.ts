@@ -6,7 +6,6 @@ export interface Match {
   owMatchId: string;
   gameMode: string;
   map: string;
-  players: string;
   blueScore: number;
   orangeScore: number;
   roundsPlayed: number;

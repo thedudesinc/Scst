@@ -1,6 +1,10 @@
-export interface Roster {
+export interface Player {
+  id?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+  matchId: number;
+  rosterPosition: string;
   name: string;
-  is_local: boolean;
   team: string;
   operator: number;
   kills: number;
@@ -8,5 +12,4 @@ export interface Roster {
   deaths: number;
   score: number;
   defuser: number;
-  health: number;
 }

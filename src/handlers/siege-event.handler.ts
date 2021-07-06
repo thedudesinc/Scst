@@ -1,12 +1,14 @@
 import { Match } from "../models/match";
-import { Roster } from "../models/roster";
+import { Player } from "../models/player";
 import { Score } from "../models/score";
 import { MatchService } from "../services/match.service";
+import { PlayerService } from "../services/player.service";
 import { TeamkillService } from "../services/teamkill.service";
 
 export class SiegeEventHandler {
   private matchService: MatchService;
   private teamkillService: TeamkillService;
+  private playerService: PlayerService;
 
   private inProgress: Match = {
     gameMatchId: "",
@@ -15,27 +17,28 @@ export class SiegeEventHandler {
     map: "",
     blueScore: 0,
     orangeScore: 0,
-    players: "",
     roundsPlayed: 0,
   };
 
-  private playerList: { key: string; value: Roster }[] = [];
+  private players: Player[] = [];
+
+  private roundPlayers: Player[] = [];
 
   constructor() {
     this.matchService = new MatchService();
     this.teamkillService = new TeamkillService();
+    this.playerService = new PlayerService();
   }
 
-  onEvents(event) {
+  async onEvents(event) {
     switch (event.events[0].name) {
       case "matchOutcome":
-        this.inProgress.players = this.playerList
-          .map((p) => p.value.name)
-          .join(",");
+        let match = await this.matchService.create(this.inProgress);
 
-        this.matchService
-          .create(this.inProgress)
-          .then(() => console.log("Match created!"));
+        for (let player of this.players) {
+          player.matchId = match.id;
+          await this.playerService.create(player);
+        }
 
         this.inProgress = {
           gameMatchId: "",
@@ -44,13 +47,27 @@ export class SiegeEventHandler {
           map: "",
           blueScore: 0,
           orangeScore: 0,
-          players: "",
           roundsPlayed: 0,
         };
+
+        this.players = [];
+        break;
+      case "roundOutcome":
+        for (let player of this.roundPlayers) {
+          let index = this.players.findIndex((p) => p.name === player.name);
+
+          if (index === -1) {
+            this.players.push(player);
+          } else {
+            this.players[index].score += player.score;
+            this.players[index].kills += player.kills;
+            this.players[index].deaths += player.deaths;
+            this.players[index].headshots += player.headshots;
+          }
+        }
         break;
       // case "kill":
       // case "roundEnd":
-      // case "roundOutcome":
       // case "roundStart":
       // case "headshot":
       // case "death":
@@ -108,23 +125,31 @@ export class SiegeEventHandler {
         let keyNames = Object.keys(info.players);
 
         if (keyNames && keyNames.length > 0) {
-          let index = this.playerList.findIndex((p) => p.key === keyNames[0]);
+          let index = this.roundPlayers.findIndex(
+            (p) => p.rosterPosition === keyNames[0]
+          );
 
-          let roster: Roster = JSON.parse(info.players[keyNames[0]]);
+          let unmappedPlayer: any = JSON.parse(info.players[keyNames[0]]);
+
+          if (!unmappedPlayer) break;
+
+          let player: Player = {
+            matchId: 0,
+            deaths: unmappedPlayer.deaths ?? 0,
+            defuser: unmappedPlayer.defuser ?? 0,
+            headshots: unmappedPlayer.headshots ?? 0,
+            kills: unmappedPlayer.kills ?? 0,
+            name: unmappedPlayer.name ?? "",
+            operator: unmappedPlayer.operator,
+            rosterPosition: keyNames[0] ?? "",
+            score: unmappedPlayer.score ?? 0,
+            team: unmappedPlayer.team ?? "",
+          };
 
           if (index !== -1) {
-            if (roster)
-              this.playerList[index] = {
-                key: keyNames[0],
-                value: roster,
-              };
+            this.roundPlayers[index] = player;
           } else {
-            if (roster) {
-              this.playerList.push({
-                key: keyNames[0],
-                value: roster,
-              });
-            }
+            this.roundPlayers.push(player);
           }
         }
         break;
